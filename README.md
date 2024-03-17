@@ -9,6 +9,8 @@ If u set verbosity On it will print all random generated accounts insted of just
 
 Program have option to let user define how many processors count want to use.ALso a pause/resume function.
 
+Feel free to change anything u want. u can compile it by using the provided java and pom files.
+
 ### if this code helped you in any way consider donation ###
 
 0x2456808AA54Cf86Fd531024b8Fd05bB2b7a671dC
