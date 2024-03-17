@@ -18,6 +18,10 @@ import org.web3j.crypto.Credentials;
 import org.web3j.crypto.ECKeyPair;
 
 public class Eth_G {
+    // Declare the Collisions variable
+    private static int Collisions = 0;
+    // Declare the collisionCountLabel variable
+    private static JLabel collisionCountLabel;
     private static JLabel attemptLabel;
     private static JLabel addressCountLabel;
     private static JTextArea resultTextArea;
@@ -36,6 +40,12 @@ public class Eth_G {
         return existingAccounts;
     }
 
+    private static void updateCollisionCountLabel() {
+        SwingUtilities.invokeLater(() -> {
+            collisionCountLabel.setText("Collisions: " + Collisions);
+        });
+    }
+
     private static void generateEthereumAccount(Set<String> existingAccounts, AtomicInteger attemptCounter, AtomicBoolean isPaused, AtomicBoolean isVerbose, Object lock) {
         Random random = new Random();
         byte[] privateKeyBytes = new byte[32];
@@ -52,10 +62,11 @@ public class Eth_G {
                     e.printStackTrace();
                 }
             }
-
             int attempt = attemptCounter.getAndIncrement();
-            String result = "Ethereum Address: " + ethereumAddress + " | Private Key: " + credentials.getEcKeyPair().getPrivateKey().toString(16);
+            String result = "Address: " + ethereumAddress + " | Private Key: " + credentials.getEcKeyPair().getPrivateKey().toString(16);
             if (existingAccounts.contains(ethereumAddress)) {
+                Collisions += 1;
+                updateCollisionCountLabel(); // Update the collision count label
                 System.out.println(result);
                 resultTextArea.append(result + "\n");
                 try (BufferedWriter writer = new BufferedWriter(new FileWriter("Found.txt", true))) {
@@ -149,10 +160,10 @@ public class Eth_G {
                     JFrame attemptFrame = new JFrame("ETH/BSC Collider by SayajinPT");
                     attemptFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                     attemptFrame.setLayout(new BorderLayout());
-                    attemptFrame.setBackground(Color.GRAY);
+                    attemptFrame.setBackground(Color.BLACK);
 
                     JPanel topPanel = new JPanel(new GridLayout(3, 1));
-                    topPanel.setBackground(Color.GRAY);
+                    topPanel.setBackground(Color.BLACK);
 
                     // Label to display the chosen file name
                     JLabel fileNameLabel = new JLabel("File: " + filePath);
@@ -174,9 +185,9 @@ public class Eth_G {
 
                     attemptFrame.add(topPanel, BorderLayout.NORTH);
                     JPanel centerPanel = new JPanel(new BorderLayout());
-                    centerPanel.setBackground(Color.GRAY);
+                    centerPanel.setBackground(Color.BLACK);
                     attemptLabel = new JLabel("Attempt count: 1");
-                    attemptLabel.setForeground(Color.YELLOW);
+                    attemptLabel.setForeground(Color.ORANGE);
                     attemptLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 14));
                     centerPanel.add(attemptLabel, BorderLayout.NORTH);
 
@@ -185,12 +196,25 @@ public class Eth_G {
                     resultTextArea.setBackground(Color.DARK_GRAY);
                     resultTextArea.setForeground(Color.YELLOW);
                     resultTextArea.setFont(new Font("Arial", Font.PLAIN, 12));
-                    JScrollPane scrollPane = new JScrollPane(resultTextArea);
+                    JScrollPane scrollPane = new JScrollPane(resultTextArea, JScrollPane.VERTICAL_SCROLLBAR_NEVER, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
                     centerPanel.add(scrollPane, BorderLayout.CENTER);
                     attemptFrame.add(centerPanel, BorderLayout.CENTER);
 
                     JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+                    bottomPanel.setBackground(Color.DARK_GRAY);
+                    bottomPanel.setForeground(Color.YELLOW);
+
+                    // Label to display the collisions
+                    collisionCountLabel = new JLabel("Collisions: " + Collisions);
+                    collisionCountLabel.setForeground(Color.YELLOW);
+                    collisionCountLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 14));
+                    bottomPanel.add(collisionCountLabel);
+
+
                     pauseButton = new JButton("Pause");
+                    pauseButton.setBackground(Color.ORANGE);
+                    pauseButton.setForeground(Color.BLACK);
+
                     pauseButton.addActionListener(event -> {
                         if (!isPaused.get()) {
                             pauseButton.setText("Resume");
@@ -206,6 +230,9 @@ public class Eth_G {
                     bottomPanel.add(pauseButton);
 
                     verbosityCheckBox = new JCheckBox("Verbosity");
+                    verbosityCheckBox.setBackground(Color.ORANGE);
+                    verbosityCheckBox.setForeground(Color.BLACK);
+
                     verbosityCheckBox.addActionListener(event -> {
                         isVerbose.set(verbosityCheckBox.isSelected());
                     });
