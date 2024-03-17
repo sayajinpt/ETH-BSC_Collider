@@ -7,7 +7,7 @@ If a match is found it will save into a 'Found.txt' file and print on the gui te
 
 If u set verbosity On it will print all random generated accounts insted of just the collisions. its better leave verbosity off.
 
-Program have option to let user define how many processors count want to use.
+Program have option to let user define how many processors count want to use.ALso a pause/resume function.
 
 ### if this code helped you in any way consider donation ###
 
