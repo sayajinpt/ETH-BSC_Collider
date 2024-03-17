@@ -5,7 +5,7 @@ This program let user load a file with addresses 1 per line and generate random 
 
 If a match is found it will save into a 'Found.txt' file and print on the gui textbox.
 
-If u set verbosity On it will print all random generated accounts insted of just the collisions. its better leave verbosity off.
+If u set verbosity On it will print all random generated accounts insted of just the collisions. its better leave verbosity OFF!! If On will create Lag in the GUI.
 
 Program have option to let user define how many processors count want to use.ALso a pause/resume function.
 
