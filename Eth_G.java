@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.web3j.crypto.Credentials;
@@ -46,7 +47,7 @@ public class Eth_G {
         });
     }
 
-    private static void generateEthereumAccount(Set<String> existingAccounts, AtomicInteger attemptCounter, AtomicBoolean isPaused, AtomicBoolean isVerbose, Object lock) {
+    private static void generateEthereumAccount(Set<String> existingAccounts, AtomicLong attemptCounter, AtomicBoolean isPaused, AtomicBoolean isVerbose, Object lock) {
         Random random = new Random();
         byte[] privateKeyBytes = new byte[32];
         random.nextBytes(privateKeyBytes);
@@ -62,7 +63,7 @@ public class Eth_G {
                     e.printStackTrace();
                 }
             }
-            int attempt = attemptCounter.getAndIncrement();
+            long attempt = attemptCounter.getAndIncrement();
             String result = "Address: " + ethereumAddress + " | Private Key: " + credentials.getEcKeyPair().getPrivateKey().toString(16);
             if (existingAccounts.contains(ethereumAddress)) {
                 Collisions += 1;
@@ -83,12 +84,12 @@ public class Eth_G {
         }
     }
 
-    private static String formatWithDots(int number) {
+    private static String formatWithDots(long number) {
         DecimalFormat df = new DecimalFormat("#,###");
         return df.format(number).replace(",", ".");
     }
 
-    private static void worker(Set<String> existingAccounts, AtomicInteger attemptCounter, AtomicBoolean isPaused, AtomicBoolean isVerbose, Object lock) {
+    private static void worker(Set<String> existingAccounts, AtomicLong attemptCounter, AtomicBoolean isPaused, AtomicBoolean isVerbose, Object lock) {
         while (true) {
             generateEthereumAccount(existingAccounts, attemptCounter, isPaused, isVerbose, lock);
         }
@@ -146,7 +147,7 @@ public class Eth_G {
 
                 try {
                     Set<String> existingAccounts = loadExistingAccounts(filePath);
-                    AtomicInteger attemptCounter = new AtomicInteger(1);
+                    AtomicLong attemptCounter = new AtomicLong(1);
                     AtomicBoolean isPaused = new AtomicBoolean(false);
                     AtomicBoolean isVerbose = new AtomicBoolean(false);
                     Object lock = new Object();
@@ -248,5 +249,3 @@ public class Eth_G {
         });
     }
 }
-
-
