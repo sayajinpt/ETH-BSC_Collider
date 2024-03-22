@@ -140,6 +140,7 @@ public class Eth_G {
             int returnValue = fileChooser.showOpenDialog(null);
             if (returnValue == JFileChooser.APPROVE_OPTION) {
                 String filePath = fileChooser.getSelectedFile().getAbsolutePath();
+                String fileName = fileChooser.getSelectedFile().getName();
                 frame.dispose();
 
                 int numProcesses = Integer.parseInt(numProcessesField.getText());
@@ -167,7 +168,7 @@ public class Eth_G {
                     topPanel.setBackground(Color.BLACK);
 
                     // Label to display the chosen file name
-                    JLabel fileNameLabel = new JLabel("File: " + filePath);
+                    JLabel fileNameLabel = new JLabel("File: " + fileName);
                     fileNameLabel.setForeground(Color.YELLOW);
                     fileNameLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 14));
                     topPanel.add(fileNameLabel);
